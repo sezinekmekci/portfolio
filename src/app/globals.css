@@ -1,0 +1,493 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 13 13 13; /* #0d0d0d */
+    --foreground: 222 222 218; /* #dededa */
+    --card: 13 13 13;
+    --card-foreground: 222 222 218;
+    --popover: 13 13 13;
+    --popover-foreground: 222 222 218;
+    --primary: 222 222 218;
+    --primary-foreground: 13 13 13;
+    --secondary: 86 81 79; /* #56514f */
+    --secondary-foreground: 222 222 218;
+    --muted: 54 51 48; /* #363330 */
+    --muted-foreground: 131 132 131; /* #838483 */
+    --accent: 62 66 79; /* #3e424f */
+    --accent-foreground: 222 222 218;
+    --destructive: 239 68 68;
+    --destructive-foreground: 222 222 218;
+    --border: 54 51 48;
+    --input: 54 51 48;
+    --ring: 222 222 218;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 13 13 13; /* #0d0d0d */
+    --foreground: 222 222 218; /* #dededa */
+    --card: 13 13 13;
+    --card-foreground: 222 222 218;
+    --popover: 13 13 13;
+    --popover-foreground: 222 222 218;
+    --primary: 222 222 218;
+    --primary-foreground: 13 13 13;
+    --secondary: 86 81 79;
+    --secondary-foreground: 222 222 218;
+    --muted: 54 51 48;
+    --muted-foreground: 131 132 131;
+    --accent: 62 66 79;
+    --accent-foreground: 222 222 218;
+    --destructive: 239 68 68;
+    --destructive-foreground: 222 222 218;
+    --border: 54 51 48;
+    --input: 54 51 48;
+    --ring: 222 222 218;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-[Inter] antialiased;
+    background-color: #0d0d0d;
+    color: #dededa;
+    overflow-x: hidden;
+  }
+
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-24 xl:px-32;
+  }
+}
+
+/* Circular Animation System */
+@keyframes testOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.test-fade {
+  animation: testOpacity 2s ease-in-out forwards;
+}
+
+@keyframes circularToCenter {
+  0% {
+    transform: translate(var(--x), var(--y)) scale(var(--scale));
+  }
+  100% {
+    transform: translate(0px, 0px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes riseBeforeCenterMove {
+  0% {
+    transform: translate(var(--x), var(--y)) rotate(var(--rotation))
+      scale(var(--scale));
+    opacity: 0.9;
+    z-index: 100;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) rotate(var(--rotation))
+      scale(calc(var(--scale) * 1.05));
+    opacity: 1;
+    z-index: 110;
+  }
+}
+
+/* Video: oldukça sakin */
+.video-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+
+  /* 🔽 Yumuşatma */
+  opacity: 0.98; /* video genel opaklık */
+  filter: grayscale(0.55) /* renkleri kır */ saturate(0.6)
+    /* doygunluğu azalt */ contrast(1.08) /* hafif kontrast */ brightness(1.05); /* çok az aydınlat */
+}
+
+/* Beyaz ışıma: açık tonları "screen" ile beyazlaştırır (maviler de beyaza yaklaşır) */
+.video-bg-whiten {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  /* merkezden yumuşak beyaz parıltı */
+  background: radial-gradient(
+    60% 60% at 50% 50%,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  mix-blend-mode: screen; /* ✨ açık tonları beyaza yakınlaştırır */
+  opacity: 0.3; /* etkisi (0–1 arası) */
+}
+
+/* Genel karartma: üstten alta çok hafif koyulaştırma */
+.video-bg-dim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.35),
+    rgba(0, 0, 0, 0.5)
+  );
+}
+
+/* metin odak vignette */
+.vignette-focus {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    45% 45% at 50% 50%,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.25) 30%,
+    rgba(0, 0, 0, 0) 60%
+  );
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+.scroll-hint {
+  opacity: 0.7;
+  animation: breathe 3s ease-in-out infinite;
+  color: #bdbdb7;
+}
+.scroll-hint svg {
+  animation: floatY 2.2s ease-in-out infinite;
+  color: #e1e1db;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.image-fade-in {
+  animation: fadeInScale 5s ease-out forwards;
+}
+
+/* Text Animations */
+@keyframes textRotate {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) rotateX(90deg);
+  }
+  10%,
+  90% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) rotateX(-90deg);
+  }
+}
+
+.rotating-text {
+  display: inline-block;
+  perspective: 1000px;
+  animation: textRotate 2s ease-in-out;
+}
+
+/* Section Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-fade-left.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.animate-fade-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-fade-right.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.animate-scale-in {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-scale-in.animate {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Hero Animations */
+@keyframes heroTitle {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+    letter-spacing: 2rem;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    letter-spacing: normal;
+  }
+}
+
+.hero-title {
+  animation: heroTitle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  letter-spacing: -0.8em;
+  line-height: 1;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+  color: #dcdad3;
+  font-weight: 300;
+  font-size: clamp(40px, 8vw, 120px);
+}
+
+/* Button Animations */
+.cosmic-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cosmic-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.cosmic-button:hover::before {
+  left: 100%;
+}
+
+.cosmic-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(222, 222, 218, 0.1);
+}
+
+/* Context Menu Animation */
+@keyframes contextMenuAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Image Gallery Hover Effects */
+.gallery-image {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-image::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(222, 222, 218, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05) rotate(1deg);
+  filter: brightness(1.1) contrast(1.1);
+}
+
+.gallery-image:hover::before {
+  opacity: 1;
+}
+
+/* Tag Animations */
+@keyframes tagFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.tag-item {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tag-item:hover {
+  animation: tagFloat 0.6s ease-in-out;
+  background-color: rgba(222, 222, 218, 0.1);
+  transform: scale(1.05);
+}
+
+/* Sadece animasyonu uygulayan yardımcı sınıf */
+.hero-animate {
+  animation: heroTitle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Başlık için ince kontur + shimmer */
+.hero-title.hero-outline {
+  position: relative;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+  paint-order: stroke fill;
+}
+@keyframes titleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.hero-sub {
+  color: #cfcfc9; /* kırık beyaz - başlıktan biraz daha koyu */
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+/* -- HERO BAŞLIK: daha küçük + kırık beyaz + doğru letter-spacing -- */
+.hero-title {
+  animation: heroTitle 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  letter-spacing: -0.02em; /* sende -0.8em idi; düzelttik */
+  line-height: 1;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+  color: #dcdad3; /* kırık beyaz */
+  font-weight: 300;
+  font-size: clamp(40px, 8vw, 120px);
+}
+
+/* Scroll hint: kırık beyaz + hover tonu ve aynı giriş animasyonu için yardımcı class zaten var (.hero-animate) */
+.scroll-hint {
+  color: #bdbdb7;
+}
+.scroll-hint:hover {
+  color: #e1e1db;
+}
+
+/* --- Sparkles video: kartların üzerinde --- */
+.sparkles-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  pointer-events: none;
+
+  /* stacking */
+  z-index: 200; /* CircularImageAnimation z-index:1'in ÜSTÜNDE, yazıların z-10'un ALTINDA */
+
+  /* görünüm */
+  opacity: 0.38; /* sadece opaklıkla yumuşak efekt */
+  filter: brightness(1.06) contrast(1.04) saturate(1.05);
+  transition: opacity 350ms ease;
+}
